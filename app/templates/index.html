@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Dashboard</title>
+    <title>Sensor Data</title>
 </head>
 <body>
-    <h1>Hello, Flask!</h1>
-    <p>This is the home page of your Flask app.</p>
+    <h1>Sensor Data</h1>
+
+    <!-- Проверка, есть ли данные -->
+    {% if data %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Value</th>
+            </tr>
+            <!-- Цикл по всем данным, полученным из базы -->
+            {% for record in data %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.timestamp }}</td>
+                <td>{{ record.value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
 </body>
 </html>
