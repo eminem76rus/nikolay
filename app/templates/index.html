@@ -8,20 +8,26 @@
 <body>
     <h1>Sensor Data</h1>
 
-    <!-- Проверка, есть ли данные -->
     {% if data %}
         <table border="1">
             <tr>
                 <th>ID</th>
                 <th>Timestamp</th>
-                <th>Value</th>
+                <!-- Заголовки для 50 параметров -->
+                {% for i in range(1, 51) %}
+                    <th>Param {{ i }}</th>
+                {% endfor %}
             </tr>
             <!-- Цикл по всем данным, полученным из базы -->
             {% for record in data %}
             <tr>
                 <td>{{ record.id }}</td>
                 <td>{{ record.timestamp }}</td>
-                <td>{{ record.value }}</td>
+                <!-- Преобразуем объект в словарь и выводим значения -->
+                {% set record_dict = record.__dict__ %}
+                {% for i in range(1, 51) %}
+                    <td>{{ record_dict['param' + i|string] }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </table>
