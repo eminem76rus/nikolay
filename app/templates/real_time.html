@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Sensor Data</title>
+    <!-- Подключаем локальный CSS-файл -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Подключаем локальный Socket.IO скрипт -->
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+</head>
+<body>
+    <h1>Real-time Sensor Data</h1>
+
+    <!-- Контейнер для таблицы -->
+    <div class="table-container">
+        <table id="sensor-data-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <!-- Генерация заголовков для 50 параметров -->
+                    {% for i in range(1, 51) %}
+                        <th>Param {{ i }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Здесь будут появляться новые строки с данными -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Кнопка "Назад" для возвращения на главную страницу -->
+    <button class="back-button" onclick="window.location.href='/'">Back</button>
+
+    <script>
+        // Подключение к веб-сокету
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Обработка события получения новых данных
+        socket.on('new_data', function (data) {
+            var table = document.getElementById('sensor-data-table').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            // Добавляем время
+            var timestampCell = newRow.insertCell(0);
+            timestampCell.textContent = new Date().toLocaleTimeString();
+
+            // Добавляем параметры
+            for (var i = 1; i <= 50; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.textContent = data['param' + i];
+            }
+
+            // Ограничиваем количество строк для отображения (например, до 10)
+            if (table.rows.length > 10) {
+                table.deleteRow(0);
+            }
+        });
+    </script>
+</body>
+</html>

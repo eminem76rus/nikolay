@@ -8,3 +8,8 @@ def home():
     data = SensorData.query.order_by(SensorData.timestamp.desc()).all()
 
     return render_template('index.html', data=data)
+
+# Маршрут для страницы с реальным временем обновления данных
+@app.route('/real-time')
+def real_time():
+    return render_template('real_time.html')
